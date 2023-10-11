@@ -17,6 +17,7 @@ app.use(cookieParser())
 
 // all routes
 app.use('/api', require('./routes/authRoutes'));
+app.use('/api', require('./routes/dashboard/categoryRoutes'));
 
 // call mongoose db
 dbConnect();
