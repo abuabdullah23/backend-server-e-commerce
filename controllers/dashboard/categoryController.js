@@ -7,7 +7,7 @@ class categoryController {
     add_category = async (req, res) => {
         const form = new formidable.IncomingForm();
         form.parse(req, async (err, fields, files) => {
-            files.image[0].originalFilename;
+            // files.image[0].filepath;
             // console.log('file name:', files);
             if (err) {
                 responseReturn(res, 404, { error: 'Something wrong' })
@@ -16,7 +16,7 @@ class categoryController {
                 let { image } = files
                 name = name.toString()
                 const slug = name.trim().split(' ').join('-');
-
+                console.log(files);
                 // console.log('image:', image.filepath);
 
                 cloudinary.config({
@@ -48,6 +48,30 @@ class categoryController {
     }
 
     get_category = async (req, res) => {
+        const { page, searchValue, perPage } = req.query;
+        const skipPage = parseInt(perPage) * (parseInt(page) - 1);
+        // console.log(req.query.perPage);
+        try {
+            if (searchValue && page && perPage) {
+                const categories = await categoryModel.find({
+                    $text: { $search: searchValue }
+                }).skip(skipPage).limit(perPage).sort({ createAt: 1 });
+                const totalCategory = await categoryModel.find({
+                    $text: { $search: searchValue }
+                }).countDocuments()
+                responseReturn(res, 200, { totalCategory, categories })
+            } else if (searchValue === '' && page && perPage) {
+                const categories = await categoryModel.find({}).skip(skipPage).limit(perPage).sort({ createdAt: -1 });
+                const totalCategory = await categoryModel.find({}).countDocuments();
+                responseReturn(res, 200, { totalCategory, categories });
+            } else {
+                const categories = await categoryModel.find({}).sort({ createdAt: -1 });
+                const totalCategory = await categoryModel.find({}).countDocuments();
+                responseReturn(res, 200, { totalCategory, categories });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 }
 
