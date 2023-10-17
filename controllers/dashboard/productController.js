@@ -52,7 +52,7 @@ class productController {
         })
     }
 
-    get_product = async (req, res) => {
+    get_products = async (req, res) => {
         const { page, searchValue, perPage } = req.query;
         const skipPage = parseInt(perPage) * (parseInt(page) - 1);
         const { id } = req;
@@ -74,7 +74,34 @@ class productController {
                 responseReturn(res, 200, { totalProducts, products });
             }
         } catch (error) {
-            console.log(error);
+            responseReturn(res, 500, { error: error.message })
+        }
+    }
+
+    // get one product
+    get_product = async (req, res) => {
+        const { productId } = req.params;
+        try {
+            const product = await productModel.findById(productId);
+            responseReturn(res, 200, { product });
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message })
+        }
+    }
+
+    // for update single product by Id
+    update_product = async (req, res) => {
+        let { productId, name, brand, category, stock, price, discount, description } = req.body;
+        name = name.trim();
+        const slug = name.split(' ').join('-');
+        try {
+            await productModel.findByIdAndUpdate(productId, {
+                name, brand, category, stock, price, discount, description, slug
+            })
+            const product = await productModel.findById(productId);
+            responseReturn(res, 200, { product, message: 'Product update successful.' });
+        } catch (error) {
+            responseReturn(res, 500, { error: error.message })
         }
     }
 }
