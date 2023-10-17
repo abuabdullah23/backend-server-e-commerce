@@ -104,5 +104,51 @@ class productController {
             responseReturn(res, 500, { error: error.message })
         }
     }
+
+    // for update single products image by Id
+    update_product_image = async (req, res) => {
+        const form = new formidable.IncomingForm({ multiples: true })
+
+        form.parse(req, async (err, field, files) => {
+            const { productId, oldImage } = field;
+            const { newImage } = files;
+            // console.log(productId[0]);
+            // console.log(oldImage[0]);
+            // console.log(newImage[0].filepath);
+
+            if (err) {
+                responseReturn(res, 404, { error: err.message })
+            } else {
+                try {
+                    cloudinary.config({
+                        cloud_name: process.env.cloud_name,
+                        api_key: process.env.api_key,
+                        api_secret: process.env.api_secret,
+                        secure: true
+                    })
+
+                    const result = await cloudinary.uploader.upload(newImage[0].filepath, { folder: 'products' })
+
+                    if (result) {
+                        let { images } = await productModel.findById(productId[0]);
+                        const index = images.findIndex((img) => img === oldImage[0]);
+                        images[index] = result.url;
+
+                        await productModel.findByIdAndUpdate(productId[0], {
+                            images
+                        })
+
+                        const product = await productModel.findById(productId[0]);
+                        responseReturn(res, 200, { product, message: 'Product image update successful.' })
+                    } else {
+                        responseReturn(res, 404, { error: 'image upload failed!' })
+                    }
+                } catch (error) {
+                    responseReturn(res, 500, { error: error.message })
+                }
+            }
+        })
+    }
+
 }
 module.exports = new productController();
