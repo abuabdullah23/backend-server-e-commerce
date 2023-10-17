@@ -51,5 +51,31 @@ class productController {
             }
         })
     }
+
+    get_product = async (req, res) => {
+        const { page, searchValue, perPage } = req.query;
+        const skipPage = parseInt(perPage) * (parseInt(page) - 1);
+        const { id } = req;
+
+        try {
+            if (searchValue && page && perPage) {
+                const products = await productModel.find({
+                    $text: { $search: searchValue },
+                    sellerId: id
+                }).skip(skipPage).limit(perPage).sort({ createAt: 1 });
+                const totalProducts = await productModel.find({
+                    $text: { $search: searchValue },
+                    sellerId: id
+                }).countDocuments()
+                responseReturn(res, 200, { totalProducts, products })
+            } else {
+                const products = await productModel.find({ sellerId: id }).skip(skipPage).limit(perPage).sort({ createdAt: -1 });
+                const totalProducts = await productModel.find({ sellerId: id }).countDocuments();
+                responseReturn(res, 200, { totalProducts, products });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 module.exports = new productController();
