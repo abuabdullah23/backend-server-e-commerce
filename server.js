@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 
 // middleware
 app.use(cors({
-    origin: [process.env.CLIENT_SIDE_BASE_URL],
+    origin: [process.env.CLIENT_SIDE_DASHBOARD_URL, process.env.CLIENT_SIDE_URL],
     credentials: true
 }));
 app.use(bodyParser.json());
@@ -19,6 +19,11 @@ app.use(cookieParser())
 app.use('/api', require('./routes/authRoutes'));
 app.use('/api', require('./routes/dashboard/categoryRoutes'));
 app.use('/api', require('./routes/dashboard/productRoutes'));
+app.use('/api', require('./routes/dashboard/sellerRoutes'));
+
+// client side routes
+app.use('/api/client', require('./routes/home/homeRoutes'));
+
 
 // call mongoose db
 dbConnect();
