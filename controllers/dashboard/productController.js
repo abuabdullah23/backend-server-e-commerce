@@ -43,6 +43,7 @@ class productController {
                     stock: parseInt(stock[0]),
                     price: parseInt(price[0]),
                     discount: parseInt(discount[0]),
+                    rating: 0,
                     images: allImageUrl,
                 })
                 responseReturn(res, 201, { category, message: 'Product added successful' })

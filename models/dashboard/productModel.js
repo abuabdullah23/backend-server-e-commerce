@@ -41,6 +41,9 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
+    rating: {
+        type: Number,
+    },
     images: {
         type: Array,
         required: true
