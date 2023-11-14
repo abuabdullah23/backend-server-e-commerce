@@ -1,5 +1,6 @@
 const categoryModel = require("../../models/dashboard/categoryModel");
 const productModel = require("../../models/dashboard/productModel");
+const queryProducts = require("../../utils/queryProducts");
 const { responseReturn } = require("../../utils/response");
 
 class homeController {
@@ -73,6 +74,23 @@ class homeController {
 
         }
     }
+
+    get_query_products = async (req, res) => {
+        const perPage = 9;
+        req.query.perPage = perPage;
+        // console.log(req.query);
+        try {
+            const products = await productModel.find({}).sort({ createdAt: -1 });
+            const totalProducts = new queryProducts(products, req.query).categoryQuery().priceQuery().ratingQuery().sortByPrice().countProducts();
+
+            const result = new queryProducts(products, req.query).categoryQuery().ratingQuery().priceQuery().sortByPrice().skip().limit().getProducts();
+
+            responseReturn(res, 200, { products: result, totalProducts, perPage })
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
 }
 
 module.exports = new homeController();
