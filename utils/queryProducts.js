@@ -21,6 +21,11 @@ class queryProducts {
         return this
     }
 
+    searchQuery = () => {
+        this.products = this.query.searchValue ? this.products.filter((p) => p.name.toLowerCase().indexOf(this.query.searchValue.toLowerCase()) > -1) : this.products
+        return this
+    }
+
     sortByPrice = () => {
         if (this.query.sortPrice) {
             if (this.query.sortPrice === 'low-to-high') {

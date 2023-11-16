@@ -83,7 +83,7 @@ class homeController {
             const products = await productModel.find({}).sort({ createdAt: -1 });
             const totalProducts = new queryProducts(products, req.query).categoryQuery().priceQuery().ratingQuery().sortByPrice().countProducts();
 
-            const result = new queryProducts(products, req.query).categoryQuery().ratingQuery().priceQuery().sortByPrice().skip().limit().getProducts();
+            const result = new queryProducts(products, req.query).categoryQuery().searchQuery().ratingQuery().priceQuery().sortByPrice().skip().limit().getProducts();
 
             responseReturn(res, 200, { products: result, totalProducts, perPage })
         } catch (error) {
