@@ -1,10 +1,10 @@
 const formidable = require("formidable");
 const cloudinary = require('cloudinary').v2
-const adminModel = require("../models/adminModel");
-const sellerCustomerModel = require("../models/chat/sellerCustomerModel");
-const sellerModel = require("../models/sellerModel");
-const { responseReturn } = require("../utils/response");
-const { createToken } = require("../utils/tokenCreate");
+const adminModel = require("../../models/dashboard/adminModel");
+const sellerCustomerModel = require("../../models/chat/sellerCustomerModel");
+const sellerModel = require("../../models/dashboard/sellerModel");
+const { responseReturn } = require("../../utils/response");
+const { createToken } = require("../../utils/tokenCreate");
 const bcrypt = require('bcrypt');
 
 class authControllers {

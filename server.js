@@ -16,13 +16,14 @@ app.use(bodyParser.json());
 app.use(cookieParser())
 
 // all routes
-app.use('/api', require('./routes/authRoutes'));
+app.use('/api', require('./routes/dashboard/authRoutes'));
 app.use('/api', require('./routes/dashboard/categoryRoutes'));
 app.use('/api', require('./routes/dashboard/productRoutes'));
 app.use('/api', require('./routes/dashboard/sellerRoutes'));
 
 // client side routes
 app.use('/api/client', require('./routes/home/homeRoutes'));
+app.use('/api/client', require('./routes/home/customerAuthRoutes'));
 
 
 // call mongoose db

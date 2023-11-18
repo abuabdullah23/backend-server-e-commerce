@@ -1,4 +1,4 @@
-const sellerModel = require("../../models/sellerModel");
+const sellerModel = require("../../models/dashboard/sellerModel");
 const { responseReturn } = require("../../utils/response");
 
 
